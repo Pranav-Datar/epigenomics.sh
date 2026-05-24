@@ -1,5 +1,7 @@
+#Epigenomic profiling would require an aligned bam file. So the raw bam file from pacbio output should be aligned alongthe assembled genome.
+
 conda activate pbmm2_env
-pbmm2 align /home/pranav/genome_assemblies/primary_data/V_panoptes/panoptes_reanalysis2/assembly_files/genome_assembly/primary.fasta /home/pranav/genome_assemblies/primary_data/V_panoptes/B_01_L27/m84144_260212_101037_s2.hifi_reads.bc2052-001.bam aligned.bam --sort
+pbmm2 align genome_assembly.fasta m84144_260212_101037_s2.hifi_reads.bc2052-001.bam aligned.bam --sort
 samtools index aligned.bam
 
 conda create -n pb-cpg-tools_env -c bioconda pb-cpg-tools

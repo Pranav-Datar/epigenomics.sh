@@ -8,3 +8,17 @@ conda create -n pb-cpg-tools_env -c bioconda pb-cpg-tools
 conda activate pb-cpg-tools_env
 aligned_bam_to_cpg_scores --bam aligned.bam --output-prefix methylation --threads 20
 
+#to calculate % methylation at CpG sites
+zcat methylation.combined.bed.gz | \
+> awk '
+> BEGIN{
+> meth=0;
+> total=0
+> }
+> !/^#/ {
+> meth += $7;
+> total += ($7 + $8)
+> }
+> END {
+> print "Weighted CpG methylation (%) =", (meth/total)*100
+> }'

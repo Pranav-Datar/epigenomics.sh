@@ -23,12 +23,16 @@ print "Weighted CpG methylation (%) =", (meth/total)*100
 }'
 
 ##homozygous and heterozygous methylation
-#first we need to build homology between both haplotypes for comparison purposes
-conda activate minimap2_env
-minimap2 -x asm5 \
-    brevicauda.assembly.bp.hap2.p_ctg.fasta \
-    brevicauda.assembly.bp.hap1.p_ctg.fasta \
-    > hap1_vs_hap2.paf
+#variant calling
 
-#keep only primary alignments
-grep "tp:A:P" hap1_vs_hap2.paf > hap1_vs_hap2.primary.paf
+podman run --rm \
+  -v /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics:/work \
+  -v /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined_reanalysis2/assembly_files/genome_assembly:/ref \
+  docker.io/google/deepvariant:1.10.0 \
+  /opt/deepvariant/bin/run_deepvariant \
+  --model_type PACBIO \
+  --ref /ref/primary.fasta \
+  --reads /work/alignment/aligned.bam \
+  --output_vcf /work/variants/variants.vcf.gz \
+  --output_gvcf /work/variants/variants.g.vcf.gz \
+  --num_shards 30

@@ -23,3 +23,9 @@ print "Weighted CpG methylation (%) =", (meth/total)*100
 }'
 
 ##homozygous and heterozygous methylation
+#first we need to build homology between both haplotypes for comparison purposes
+conda activate minimap2_env
+minimap2 -x asm5 \
+    brevicauda.assembly.bp.hap2.p_ctg.fasta \
+    brevicauda.assembly.bp.hap1.p_ctg.fasta \
+    > hap1_vs_hap2.paf

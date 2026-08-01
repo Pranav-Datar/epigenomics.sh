@@ -21,3 +21,5 @@ total += ($7 + $8)
 END {
 print "Weighted CpG methylation (%) =", (meth/total)*100
 }'
+
+##homozygous and heterozygous methylation

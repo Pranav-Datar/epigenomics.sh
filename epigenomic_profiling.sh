@@ -22,6 +22,31 @@ END {
 print "Weighted CpG methylation (%) =", (meth/total)*100
 }'
 
+zcat methylation/methylation.combined.bed.gz | awk '
+BEGIN{
+    low=0;
+    intermediate=0;
+    high=0;
+    total=0;
+}
+!/^#/ && $6>=10 {
+
+    total++;
+
+    if($9 >= 70)
+        high++;
+    else if($9 >= 30)
+        intermediate++;
+    else
+        low++;
+}
+END{
+    printf "CpGs analyzed (coverage >=10): %d\n", total;
+    printf "High methylation (>=70%%): %d (%.2f%%)\n", high, 100*high/total;
+    printf "Intermediate (30-70%%): %d (%.2f%%)\n", intermediate, 100*intermediate/total;
+    printf "Low methylation (<30%%): %d (%.2f%%)\n", low, 100*low/total;
+}'
+
 ##homozygous and heterozygous methylation
 #variant calling
 

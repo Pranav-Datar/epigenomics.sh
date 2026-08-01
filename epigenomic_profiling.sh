@@ -29,3 +29,6 @@ minimap2 -x asm5 \
     brevicauda.assembly.bp.hap2.p_ctg.fasta \
     brevicauda.assembly.bp.hap1.p_ctg.fasta \
     > hap1_vs_hap2.paf
+
+#keep only primary alignments
+grep "tp:A:P" hap1_vs_hap2.paf > hap1_vs_hap2.primary.paf

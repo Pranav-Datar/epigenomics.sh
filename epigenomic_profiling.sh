@@ -114,7 +114,101 @@ podman run --rm \
   --num_shards 30
 
 #check the variants
-  
+bcftools stats variants.vcf.gz > variants.stats
+
+#variant filtering
+
+#keep PASS variants
+bcftools view -f PASS variants.vcf.gz -Oz -o variants_PASS.vcf.gz
+bcftools index variants_PASS.vcf.gz
+
+#GQ and DP filtering
+
+#to set the threshold, examine the GQ and DP distribution
+bcftools query -f '[%GQ\n]' variants_PASS.vcf.gz > GQ.txt
+bcftools query -f '[%DP\n]' variants_PASS.vcf.gz > DP.txt
+
+awk '
+{
+sum+=$1
+n++
+if(min=="" || $1<min) min=$1
+if($1>max) max=$1
+}
+END{
+print "Variants:",n
+print "Min:",min
+print "Mean:",sum/n
+print "Max:",max
+}' GQ.txt
+
+awk '
+{
+sum+=$1
+n++
+if(min=="" || $1<min) min=$1
+if($1>max) max=$1
+}
+END{
+print "Variants:",n
+print "Min:",min
+print "Mean:",sum/n
+print "Max:",max
+}' DP.txt
+
+conda deactivate
+conda activate r_env
+R
+GQ <- scan("GQ.txt")
+DP <- scan("DP.txt")
+length(GQ)
+length(DP)
+summary(GQ)
+summary(DP)
+
+quantile(GQ,
+         probs = c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+
+quantile(DP,
+         probs = c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))hist(GQ,
+     breaks = 100,
+     main = "Genotype Quality (GQ)",
+     xlab = "Genotype Quality",
+     ylab = "Number of variants")
+
+     hist(GQ[GQ <= 50],
+     breaks = 50,
+     main = "Genotype Quality (0-50)",
+     xlab = "Genotype Quality",
+     ylab = "Number of variants")
+
+     hist(DP,
+     breaks = 100,
+     main = "Read Depth (DP)",
+     xlab = "Read Depth",
+     ylab = "Number of variants")
+
+     hist(DP[DP <= 60],
+     breaks = 60,
+     main = "Read Depth (0-60)",
+     xlab = "Read Depth",
+     ylab = "Number of variants")
+
+     pdf("Variant_QC_histograms.pdf", width = 8, height = 6)
+
+hist(GQ[GQ <= 50],
+     breaks = 50,
+     main = "Genotype Quality (0-50)",
+     xlab = "GQ",
+     ylab = "Number of variants")
+
+hist(DP[DP <= 60],
+     breaks = 60,
+     main = "Read Depth (0-60)",
+     xlab = "DP",
+     ylab = "Number of variants")
+
+dev.off()
 
 #WhatsHap for phasing, it uses variant calling data and aligned.bam file. Assigns variants to paternal and maternal haplotypes
 

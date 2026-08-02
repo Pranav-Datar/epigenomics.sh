@@ -113,6 +113,9 @@ podman run --rm \
   --output_gvcf /work/variants/variants.g.vcf.gz \
   --num_shards 30
 
+#check the variants
+  
+
 #WhatsHap for phasing, it uses variant calling data and aligned.bam file. Assigns variants to paternal and maternal haplotypes
 
 conda create -n whatshap_env -c bioconda whatshap

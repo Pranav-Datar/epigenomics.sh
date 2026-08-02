@@ -2,9 +2,8 @@
 
 ## 1. Align HiFi reads to the reference genome
 
-Epigenomic profiling requires an aligned BAM file. Align the PacBio HiFi reads to the assembled reference genome using **pbmm2**, then index the resulting BAM file.
+#Epigenomic profiling requires an aligned BAM file. Align the PacBio HiFi reads to the assembled reference genome using **pbmm2**, then index the resulting BAM file.
 
-```bash
 conda activate pbmm2_env
 
 pbmm2 align genome_assembly.fasta \
@@ -17,11 +16,11 @@ samtools index aligned.bam
 
 ---
 
-## 2. Call CpG methylation
+##2. Call CpG methylation
 
-Install and activate **pb-cpg-tools**, then generate genome-wide CpG methylation calls.
+#Install and activate **pb-cpg-tools**, then generate genome-wide CpG methylation calls.
 
-```bash
+
 conda create -n pb-cpg-tools_env -c bioconda pb-cpg-tools
 conda activate pb-cpg-tools_env
 
@@ -31,11 +30,11 @@ aligned_bam_to_cpg_scores \
     --threads 20
 ```
 
-This generates:
+#This generates:
 
-* `methylation.combined.bed.gz` — per-CpG methylation calls
-* `methylation.combined.bw` — genome browser track
-* `methylation.log` — run log
+#methylation.combined.bed.gz — per-CpG methylation calls
+#methylation.combined.bw — genome browser track
+#methylation.log — run log
 
 ---
 

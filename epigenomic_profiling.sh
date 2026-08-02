@@ -210,6 +210,8 @@ hist(DP[DP <= 60],
 
 dev.off()
 
+ bcftools filter -i 'FORMAT/GQ>=20 && FORMAT/DP>=10 && FORMAT/DP <=50' variants_PASS.vcf.gz -Oz -o variants_GQ20_DP10_50_PASS.vcf.gz
+ 
 #WhatsHap for phasing, it uses variant calling data and aligned.bam file. Assigns variants to paternal and maternal haplotypes
 
 conda create -n whatshap_env -c bioconda whatshap

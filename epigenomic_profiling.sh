@@ -342,25 +342,52 @@ FNR==NR{
 
 conda activate r_env
 R
+options(scipen=999)
+
 d <- read.table("haplotype_methylation_difference.tsv", header=FALSE)
 
 delta <- d$V5
 
-summary(delta)
-quantile(delta, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+cat("\nSummary statistics\n")
+print(summary(delta))
 
-pdf("Delta_methylation_distribution.pdf", width=8, height=6)
+cat("\nStandard deviation\n")
+print(sd(delta))
+
+cat("\nVariance\n")
+print(var(delta))
+
+cat("\nQuantiles\n")
+print(quantile(delta,
+               probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1)))
+
+pdf("Delta_methylation_statistics.pdf", width=10, height=8)
+
+par(mfrow=c(2,2))
 
 hist(delta,
      breaks=100,
+     col="grey85",
+     border="white",
+     main="Delta methylation",
      xlab="Absolute methylation difference (%)",
-     main="Delta methylation distribution")
-
-pdf("Delta_density.pdf", width=8, height=6)
+     ylab="Number of CpGs")
 
 plot(density(delta),
+     lwd=2,
+     main="Density",
      xlab="Absolute methylation difference (%)",
-     main="Delta methylation density")
+     ylab="Density")
+
+boxplot(delta,
+        horizontal=TRUE,
+        col="grey85",
+        main="Delta methylation")
+
+plot(ecdf(delta),
+     main="Cumulative distribution",
+     xlab="Absolute methylation difference (%)",
+     ylab="Fraction of CpGs")
 
 dev.off()
 

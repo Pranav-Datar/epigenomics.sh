@@ -247,3 +247,9 @@ whatshap haplotag \
 conda deactivate
 conda activate samtools
 /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam
+
+
+#now use pb-cpg-tools with haplotagged bam instead of aligned bam
+conda deactivate
+conda activate pb-cpg-tools_env
+aligned_bam_to_cpg_scores --bam haplotagged.bam --output-prefix allele_specific_methylation --threads 40

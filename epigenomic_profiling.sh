@@ -170,7 +170,9 @@ quantile(GQ,
          probs = c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
 
 quantile(DP,
-         probs = c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))hist(GQ,
+         probs = c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+     
+     hist(GQ,
      breaks = 100,
      main = "Genotype Quality (GQ)",
      xlab = "Genotype Quality",

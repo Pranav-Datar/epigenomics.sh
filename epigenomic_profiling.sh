@@ -230,6 +230,8 @@ conda activate whatshap_env
 #phasing assigns variants to paternal or maternal chromosome
 whatshap phase --reference /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined_reanalysis2/assembly_files/genome_assembly/primary.fasta variants_het_GQ20_DP10_50_PASS.vcf.gz /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/aligned.bam -o phased.vcf.gz
 
+#index the phased vcf
+tabix -p vcf phased.vcf.gz
 #haplotagging assigns or tags reads to haplotypes, paternal or maternal haplotype
 
 #the sole reason of generating a vcf was haplotagging of reads so that we know homozygous and heterozygous methlyation calls

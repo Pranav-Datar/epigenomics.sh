@@ -340,4 +340,27 @@ FNR==NR{
 }
 ' hap1.cov10.sorted.tsv hap2.cov10.sorted.tsv > haplotype_methylation_difference.tsv
 
+conda activate r_env
+R
+d <- read.table("haplotype_methylation_difference.tsv", header=FALSE)
+
+delta <- d$V5
+
+summary(delta)
+quantile(delta, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+
+pdf("Delta_methylation_distribution.pdf", width=8, height=6)
+
+hist(delta,
+     breaks=100,
+     xlab="Absolute methylation difference (%)",
+     main="Delta methylation distribution")
+
+pdf("Delta_density.pdf", width=8, height=6)
+
+plot(density(delta),
+     xlab="Absolute methylation difference (%)",
+     main="Delta methylation density")
+
+dev.off()
 

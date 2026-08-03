@@ -249,7 +249,95 @@ conda activate samtools
 /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam
 
 
+
 #now use pb-cpg-tools with haplotagged bam instead of aligned bam
 conda deactivate
 conda activate pb-cpg-tools_env
 aligned_bam_to_cpg_scores --bam haplotagged.bam --output-prefix allele_specific_methylation --threads 40
+
+
+#filter by coverage for consistency
+zcat allele_specific_methylation.hap1.bed.gz | \
+awk '!/^#/ {print $6}' > hap1_coverage.txt
+
+zcat allele_specific_methylation.hap2.bed.gz | \
+awk '!/^#/ {print $6}' > hap2_coverage.txt
+
+conda activate r_env
+R
+
+hap1 <- scan("hap1_coverage.txt")
+hap2 <- scan("hap2_coverage.txt")
+
+summary(hap1)
+summary(hap2)
+
+quantile(hap1, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+quantile(hap2, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+
+pdf("Coverage_distribution.pdf", width=10, height=8)
+
+par(mfrow=c(2,2))
+
+hist(hap1, breaks=100, xlim=c(0,100),
+     main="Haplotype 1 Coverage",
+     xlab="Coverage", ylab="CpG count")
+abline(v=10, lty=2, lwd=2)
+abline(v=15, lty=3, lwd=2)
+
+hist(hap2, breaks=100, xlim=c(0,100),
+     main="Haplotype 2 Coverage",
+     xlab="Coverage", ylab="CpG count")
+abline(v=10, lty=2, lwd=2)
+abline(v=15, lty=3, lwd=2)
+
+boxplot(hap1, horizontal=TRUE, main="Haplotype 1")
+boxplot(hap2, horizontal=TRUE, main="Haplotype 2")
+
+dev.off()
+
+cat("\nRetention (%) at different coverage thresholds\n")
+for(i in c(4,6,8,10,12,15,20)){
+  cat(sprintf("Coverage >= %-2d : Hap1 = %6.2f%%   Hap2 = %6.2f%%\n",
+              i,
+              100*mean(hap1>=i),
+              100*mean(hap2>=i)))
+}
+
+#filter by coverage, determine the cutoff according to the distribtution
+zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap1.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap1_methylation_cov10.tsv
+
+zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap1.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap1_methylation_cov10.tsv
+
+#Now, the files are ready, lets approach the questions
+
+#Q1) Epigenetic heterozygosity or differentially methylated CpGs or haplotype specific methlyation
+
+#sort both files, to compare the same CpG between 2 haplotypes
+sort -k1,1 -k2,2n hap1_methylation_cov10.tsv > hap1.cov10.sorted.tsv
+
+sort -k1,1 -k2,2n hap2_methylation_cov10.tsv > hap2.cov10.sorted.tsv
+
+#merge hap1 and hap2, to note down the difference in methlyation between the two haplotypes
+
+awk '
+BEGIN{FS=OFS="\t"}
+
+FNR==NR{
+    key=$1 FS $2
+    hap1[key]=$4
+    next
+}
+
+{
+    key=$1 FS $2
+
+    if(key in hap1){
+        diff=hap1[key]-$4
+        if(diff<0) diff=-diff
+        print $1,$2,hap1[key],$4,diff
+    }
+}
+' hap1.cov10.sorted.tsv hap2.cov10.sorted.tsv > haplotype_methylation_difference.tsv
+
+

@@ -244,3 +244,6 @@ whatshap haplotag \
   
 #the sole reason of generating a vcf was haplotagging of reads so that we know homozygous and heterozygous methlyation calls
 
+conda deactivate
+conda activate samtools
+/home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam

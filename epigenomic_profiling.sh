@@ -232,7 +232,13 @@ whatshap phase --reference /home/pranav/genome_assemblies/primary_data/V_brevica
 
 #index the phased vcf
 tabix -p vcf phased.vcf.gz
-#haplotagging assigns or tags reads to haplotypes, paternal or maternal haplotype
 
+#haplotagging assigns or tags reads to haplotypes, paternal or maternal haplotype
+whatshap haplotag \
+  --reference /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined_reanalysis2/assembly_files/genome_assembly/primary.fasta \
+  --output /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam \
+  /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/variants/phased.vcf.gz \
+  /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/aligned.bam
+  
 #the sole reason of generating a vcf was haplotagging of reads so that we know homozygous and heterozygous methlyation calls
 

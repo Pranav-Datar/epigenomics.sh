@@ -294,8 +294,6 @@ abline(v=15, lty=3, lwd=2)
 boxplot(hap1, horizontal=TRUE, main="Haplotype 1")
 boxplot(hap2, horizontal=TRUE, main="Haplotype 2")
 
-dev.off()
-
 cat("\nRetention (%) at different coverage thresholds\n")
 for(i in c(4,6,8,10,12,15,20)){
   cat(sprintf("Coverage >= %-2d : Hap1 = %6.2f%%   Hap2 = %6.2f%%\n",
@@ -303,6 +301,9 @@ for(i in c(4,6,8,10,12,15,20)){
               100*mean(hap1>=i),
               100*mean(hap2>=i)))
 }
+
+dev.off()
+
 
 #filter by coverage, determine the cutoff according to the distribtution
 zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap1.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap1_methylation_cov10.tsv

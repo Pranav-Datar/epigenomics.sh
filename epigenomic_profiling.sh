@@ -307,7 +307,7 @@ for(i in c(4,6,8,10,12,15,20)){
 #filter by coverage, determine the cutoff according to the distribtution
 zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap1.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap1_methylation_cov10.tsv
 
-zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap1.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap1_methylation_cov10.tsv
+zcat /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/methylation/haplotype_specific/allele_specific_methylation.hap2.bed.gz | awk '!/^#/ && $6>=10 {print $1"\t"$2"\t"$6"\t"$9}' > hap2_methylation_cov10.tsv
 
 #Now, the files are ready, lets approach the questions
 

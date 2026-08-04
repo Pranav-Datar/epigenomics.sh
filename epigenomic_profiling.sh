@@ -246,7 +246,7 @@ whatshap haplotag \
 
 conda deactivate
 conda activate samtools
-sam index /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam
+samtools index /home/pranav/genome_assemblies/primary_data/V_brevicauda/brevicauda_combined/epigenomics/alignment/haplotagged.bam
 
 
 

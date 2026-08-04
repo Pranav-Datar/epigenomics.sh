@@ -635,6 +635,46 @@ zcat methylation/haplotype_specific/allele_specific_methylation.hap2.bed.gz \
 #Coverage ≥10 provides a good balance between reliability and CpG retention, 
 #although the exact threshold should be determined empirically for each dataset.
 
+conda activate r_env
+R
+hap1 <- scan("hap1_coverage.txt")
+hap2 <- scan("hap2_coverage.txt")
+
+summary(hap1)
+summary(hap2)
+
+quantile(hap1, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+quantile(hap2, probs=c(0,0.01,0.05,0.10,0.25,0.50,0.75,0.90,0.95,0.99,1))
+
+pdf("Coverage_distribution.pdf", width=10, height=8)
+
+par(mfrow=c(2,2))
+
+hist(hap1, breaks=100, xlim=c(0,100),
+     main="Haplotype 1 Coverage",
+     xlab="Coverage", ylab="CpG count")
+abline(v=10, lty=2, lwd=2)
+abline(v=15, lty=3, lwd=2)
+
+hist(hap2, breaks=100, xlim=c(0,100),
+     main="Haplotype 2 Coverage",
+     xlab="Coverage", ylab="CpG count")
+abline(v=10, lty=2, lwd=2)
+abline(v=15, lty=3, lwd=2)
+
+boxplot(hap1, horizontal=TRUE, main="Haplotype 1")
+boxplot(hap2, horizontal=TRUE, main="Haplotype 2")
+
+cat("\nRetention (%) at different coverage thresholds\n")
+for(i in c(4,6,8,10,12,15,20)){
+  cat(sprintf("Coverage >= %-2d : Hap1 = %6.2f%%   Hap2 = %6.2f%%\n",
+              i,
+              100*mean(hap1>=i),
+              100*mean(hap2>=i)))
+}
+
+dev.off()
+
 
 ############################################################################################
 
